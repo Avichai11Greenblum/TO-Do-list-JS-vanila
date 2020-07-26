@@ -105,3 +105,34 @@ form button:hover {
 .off {
     background-position: left;
 }
+
+select {   /* The HTML element */ 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+
+    /* color: orange; */
+    cursor: pointer;
+    width: 10rem;
+    padding: 0.5rem;
+
+}
+.menu {   /* The div of select  */
+    margin-left: 2vh;
+    position: relative;
+    overflow: hidden;
+}
+.menu::after {
+    content: '\25BC';
+    background: dodgerblue;
+    color: white;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.5rem;
+}
+.menu:hover::after {
+    color: dodgerblue;
+    background: white;
+}
