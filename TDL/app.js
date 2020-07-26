@@ -2,10 +2,12 @@
 const input = document.querySelector('.todo-input');
 const button = document.querySelector('.todo-button');
 const list = document.querySelector('.tdl-list');
+const filter = document.querySelector('.menu-select');
 
 // Event listener
 button.addEventListener("click", addTodo);
 list.addEventListener('click', btnPress);
+filter.addEventListener('click', filterTDL);
 
 // Functions
 function addTodo(Event) {
@@ -13,44 +15,49 @@ function addTodo(Event) {
     event.preventDefault();
     
     // missions div that contains the mission
-    const missions = document.createElement('div');
-    missions.classList.add('missions');
+    const mission = document.createElement('div');
+    mission.classList.add('mission');
 
     // create a mission
     const newTodo = document.createElement('li');
     newTodo.classList.add('todo-item');
     newTodo.innerText = input.value;
     input.value = '';
-    missions.appendChild(newTodo); // adding to the div
+    mission.appendChild(newTodo); // adding to the div
 
     // Making a check button
     const checkButton = document.createElement('button');
     checkButton.classList.add('check-btn');
     checkButton.innerHTML = '<i class="far fa-check-square"></i>';
-    missions.appendChild(checkButton); // adding to the div
+    mission.appendChild(checkButton); // adding to the div
     
     // Making a delete button
     const delButton = document.createElement('button');
     delButton.classList.add('delete-btn');
     delButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
-    missions.appendChild(delButton); // adding to the div
+    mission.appendChild(delButton); // adding to the div
 
     // Append the mission div to tdl list
-    list.appendChild(missions);
+    list.appendChild(mission);
 }
 
+// A function for button pressing
 function btnPress(event) {
     const target = event.target;
 
+
     // del button
+
+    // In case the user press on the trash icon
     if (target.classList.value === 'fas fa-trash-alt'){
         const parent = target.parentElement.parentElement;
         parent.classList.add('off');
         setTimeout( () => {
             parent.remove();
         }, 600);
-        })
+        
     } 
+    // In case the user press around the trash icon but still on the del button
     else if (target.classList.value === 'delete-btn') {
         const parent = target.parentElement;
         parent.classList.add('off');
@@ -61,13 +68,39 @@ function btnPress(event) {
 
 
     // check button
+
+    // In case the user press on the check icon
     else if (target.classList.value === 'check-btn') {
         const parent = target.parentElement;
         parent.classList.toggle('completed');
     }
+    // In case the user press around the check icon
     else if (target.classList.value === "far fa-check-square") {
         const parent = target.parentElement.parentElement;
         parent.classList.toggle('completed');
     }
-    
+}
+
+// A function that will filter us the todos to all/completed/uncompleted
+function filterTDL(event) {
+    const todos = list.childNodes;
+
+    console.log(todos);    
+    // console.log(`the target value is ${event.target.value}`);
+
+    todos.forEach( (todo) => {
+        switch (event.target.value){
+
+            case "all":
+                todo.style.display = "flex";
+                break;
+
+            case 'completed':
+                if (todo.classList.contains('completed')){
+                    todo.style.display = 'flex';
+                } else {
+                    todo.style.display = "none";
+                }
+        }
+    })
 }
