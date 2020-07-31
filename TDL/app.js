@@ -60,7 +60,7 @@ function btnPress(event) {
     // In case the user press around the trash icon but still on the del button
     else if (target.classList.value === 'delete-btn') {
         const parent = target.parentElement;
-        parent.classList.add('off');
+        parent.classList.add('off'); // i give it a class for the css off element 
         setTimeout( () => {
             parent.remove();
         }, 600);
@@ -83,24 +83,34 @@ function btnPress(event) {
 
 // A function that will filter us the todos to all/completed/uncompleted
 function filterTDL(event) {
-    const todos = list.childNodes;
+    const todos = list.childNodes; 
 
-    console.log(todos);    
-    // console.log(`the target value is ${event.target.value}`);
+    // console.log(todos);   // a check for the structure of the nodes
+    // console.log(`the target value is ${event.target.value}`);  // a check for the given target value
 
     todos.forEach( (todo) => {
-        switch (event.target.value){
+
+        switch (event.target.value) {
 
             case "all":
-                todo.style.display = "flex";
+                todo.style.display = 'flex';
                 break;
 
-            case 'completed':
+            case 'Completed-value':
                 if (todo.classList.contains('completed')){
                     todo.style.display = 'flex';
                 } else {
-                    todo.style.display = "none";
+                    todo.style.display = 'none';
                 }
+                break;
+
+            case "Uncompleted-value":
+                if (! todo.classList.contains('completed')) {
+                    todo.style.display = 'flex';
+                } else {
+                    todo.style.display = 'none';
+                }
+                break;
         }
-    })
+    });
 }
