@@ -52,7 +52,7 @@ form button:hover {
     min-width: 40%;
     list-style: none;
 }
-.missions {
+.mission {
     margin: 0.5rem;
     background: linear-gradient(to left, white 50%, rgb(255, 79, 79) 50%);
     background-size: 200% 100%;
@@ -64,7 +64,7 @@ form button:hover {
     align-items: center;
     transition: 600ms all ease;
 }
-.missions li {
+.mission li {
     flex: 1;
 }
 
