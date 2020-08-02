@@ -22,7 +22,7 @@ function addTodo(Event) {
     const newTodo = document.createElement('li');
     newTodo.classList.add('todo-item');
     newTodo.innerText = input.value;
-    input.value = '';
+    
     mission.appendChild(newTodo); // adding to the div
 
     // Making a check button
@@ -39,6 +39,12 @@ function addTodo(Event) {
 
     // Append the mission div to tdl list
     list.appendChild(mission);
+
+    // save the todo to local storage (the function at the end of the program)
+    saveTodoToLocal(input.value);
+
+    // After the user will add the new todo the input box will clear itself
+    input.value = '';
 }
 
 // A function for button pressing
@@ -113,4 +119,22 @@ function filterTDL(event) {
                 break;
         }
     });
+}
+
+function saveTodoToLocal (todo) {
+    // A check to see if i already have in the local storage previous tasks 
+    let todos;
+    
+    if (localStorage.getItem('todos') === null) {
+        // if we don't have any previous tasks we will create a new list that will contain the tasks
+        todos = [];
+    } else {
+        // if we do have previous tasks we will use them as "todos"
+        todos = JSON.parse(localStorage.getItem("todos"));    
+    }
+    // adding the new todo mission to the list
+    todos.push(todo);
+
+    // setting the new todos in th local storage
+    localStorage.setItem("todos", JSON.stringify(todos));
 }
