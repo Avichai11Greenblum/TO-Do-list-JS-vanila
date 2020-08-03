@@ -61,6 +61,7 @@ function btnPress(event) {
     if (target.classList.value === 'fas fa-trash-alt'){
         const parent = target.parentElement.parentElement;
         parent.classList.add('off');  // i give it a class for the css "off" element
+        delFromLocal(parent);
         setTimeout( () => {
             parent.remove();
         }, 600);
@@ -70,7 +71,6 @@ function btnPress(event) {
     else if (target.classList.value === 'delete-btn') {
         const parent = target.parentElement;
         parent.classList.add('off');  
-        console.log(parent);
         delFromLocal(parent);
         setTimeout( () => {
             parent.remove();
