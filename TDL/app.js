@@ -4,11 +4,15 @@ const submitButton = document.querySelector('.todo-button');
 const list = document.querySelector('.tdl-list');
 const filter = document.querySelector('.menu-select');
 
+// global elements
+let check;
+
 // Event listener
 submitButton.addEventListener("click", addTodo);   // --> When submitting a new task 
 list.addEventListener('click', btnPress);    // --> When pressing on a del/check button 
 filter.addEventListener('click', filterTDL); // --> 
 document.addEventListener('DOMContentLoaded', LocalToGUI);
+// document.addEventListener("DOMContentLoaded", bringCompleted);
 
 // Functions
 
@@ -82,11 +86,13 @@ function btnPress(event) {
     // In case the user press on the check icon
     else if (target.classList.value === 'check-btn') {
         const parent = target.parentElement;
+        saveCompleted(parent.innerText);
         parent.classList.toggle('completed');
     }
     // In case the user press around the check icon
     else if (target.classList.value === "far fa-check-square") {
         const parent = target.parentElement.parentElement;
+        saveCompleted(parent.innerText);
         parent.classList.toggle('completed');
     }
 }
@@ -94,9 +100,6 @@ function btnPress(event) {
 // A function that will filter us the todos to all/completed/uncompleted
 function filterTDL(event) {
     const todos = list.childNodes; 
-
-    // console.log(todos);   // a check for the structure of the nodes
-    // console.log(`the target value is ${event.target.value}`);  // a check for the given target value
 
     todos.forEach( (todo) => {
 
@@ -136,6 +139,7 @@ function saveTodoToLocal (todo) {
         // if we do have previous tasks we will use them as "todos"
         todos = JSON.parse(localStorage.getItem("todos"));    
     }
+    
     // adding the new todo mission to the list
     todos.push(todo);
 
@@ -184,6 +188,12 @@ function LocalToGUI () {
         delButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
         mission.appendChild(delButton); // adding to the div
 
+        checkForDone(todo);
+        if (check) {
+            mission.classList.toggle('completed');
+        }
+        check = null;
+
         // Append the mission div to tdl list
         list.appendChild(mission);
     });
@@ -207,4 +217,45 @@ function delFromLocal(todo) {
      todos.splice(todos.indexOf(todoText), 1);
      localStorage.setItem("todos",JSON.stringify(todos));
     
+}
+
+function saveCompleted(finishedTask) {
+    let tasksDone;
+    
+    if (localStorage.getItem('tasksDone') === null) {
+        // if we don't have any previous tasks that we completed we will create a new list that will contain the tasks we did
+        tasksDone = [];
+    } else {
+        // if we do have previous tasks we did we will use them as "tasksDone"
+        tasksDone = JSON.parse(localStorage.getItem("tasksDone"));    
+    }
+    
+    // adding the new todo mission to the list
+    tasksDone.push(finishedTask);
+
+    // setting the new todos in th local storage
+    localStorage.setItem("tasksDone", JSON.stringify(tasksDone));
+}
+
+
+function checkForDone(todo) {
+    let tasksDone;
+    if (localStorage.getItem('tasksDone') === null) {
+        // if we don't have any previous tasks that we completed we will create a new list that will contain the tasks we did
+        tasksDone = [];  
+
+    } else {
+        // if we do have previous tasks we did we will use them as "tasksDone"
+        tasksDone = JSON.parse(localStorage.getItem("tasksDone"));    
+    }
+    tasksDone.forEach(task => {
+       if (todo === task){
+            check = true;
+       } else {
+            check = false;
+       }
+
+        // console.log(task);
+        // console.log(todo);
+    });
 }
