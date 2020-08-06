@@ -66,6 +66,7 @@ function btnPress(event) {
         const parent = target.parentElement.parentElement;
         parent.classList.add('off');  // i give it a class for the css "off" element
         delFromLocal(parent);
+        delFromCompleted(parent);
         setTimeout( () => {
             parent.remove();
         }, 600);
@@ -76,6 +77,7 @@ function btnPress(event) {
         const parent = target.parentElement;
         parent.classList.add('off');  
         delFromLocal(parent);
+        delFromCompleted(parent);
         setTimeout( () => {
             parent.remove();
         }, 600);
@@ -86,13 +88,25 @@ function btnPress(event) {
     // In case the user press on the check icon
     else if (target.classList.value === 'check-btn') {
         const parent = target.parentElement;
+
         saveCompleted(parent.innerText);
+
+        if (parent.classList.contains('completed')){
+            delFromCompleted(parent);
+        }
+
         parent.classList.toggle('completed');
     }
     // In case the user press around the check icon
     else if (target.classList.value === "far fa-check-square") {
         const parent = target.parentElement.parentElement;
+        
         saveCompleted(parent.innerText);
+
+        if (parent.classList.contains('completed')){
+            delFromCompleted(parent);
+        }
+        
         parent.classList.toggle('completed');
     }
 }
@@ -127,6 +141,7 @@ function filterTDL(event) {
         }
     });
 }
+
 
 // A check to see if i already have in the local storage previous tasks 
 function saveTodoToLocal (todo) {
@@ -214,11 +229,12 @@ function delFromLocal(todo) {
     }
 
     const todoText = todo.children[0].innerText; 
-     todos.splice(todos.indexOf(todoText), 1);
-     localStorage.setItem("todos",JSON.stringify(todos));
+    todos.splice(todos.indexOf(todoText), 1);
+    localStorage.setItem("todos",JSON.stringify(todos));
     
 }
 
+// A function that will add the tasks we complete to the tasksDone local list 
 function saveCompleted(finishedTask) {
     let tasksDone;
     
@@ -230,16 +246,38 @@ function saveCompleted(finishedTask) {
         tasksDone = JSON.parse(localStorage.getItem("tasksDone"));    
     }
     
-    // adding the new todo mission to the list
-    tasksDone.push(finishedTask);
-
+    // adding the new todo mission to the list (if we re-check it wont add it again)
+    if (!tasksDone.includes(finishedTask)){
+        tasksDone.push(finishedTask);
+    }
+    
     // setting the new todos in th local storage
     localStorage.setItem("tasksDone", JSON.stringify(tasksDone));
 }
 
+function delFromCompleted(todo) {
+    let tasksDone;
 
+    if (localStorage.getItem('tasksDone') === null) {
+        // if we don't have any previous tasks that we completed we will create a new list that will contain the tasks we did
+        tasksDone = [];
+    } else {
+        // if we do have previous tasks we did we will use them as "tasksDone"
+        tasksDone = JSON.parse(localStorage.getItem("tasksDone"));    
+    }
+
+    const completedText = todo.children[0].innerText; 
+    tasksDone.splice(tasksDone.indexOf(completedText), 1);
+    localStorage.setItem("tasksDone",JSON.stringify(tasksDone));
+}
+
+
+                            //        needs to be fixed
+
+// A function that when we refresh/get to the page will mark for us the checked tasks !-----> AT THE MOMENT IT WORKS ONLY FOR ONE TASK 
 function checkForDone(todo) {
     let tasksDone;
+
     if (localStorage.getItem('tasksDone') === null) {
         // if we don't have any previous tasks that we completed we will create a new list that will contain the tasks we did
         tasksDone = [];  
@@ -248,6 +286,7 @@ function checkForDone(todo) {
         // if we do have previous tasks we did we will use them as "tasksDone"
         tasksDone = JSON.parse(localStorage.getItem("tasksDone"));    
     }
+
     tasksDone.forEach(task => {
        if (todo === task){
             check = true;
